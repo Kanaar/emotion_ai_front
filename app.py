@@ -1,42 +1,38 @@
 import streamlit as st
+import imutils
 import cv2
+import numpy as np
 
 '''
 # Emotion Ai front
 '''
 
-st.markdown(''' do cool stuff ''')
-
-run = st.checkbox('activate')
 FRAME_WINDOW = st.image([])
+FRAME_WINDOW_2 = st.image([])
 camera = cv2.VideoCapture(0)
+faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+snap_btn = st.button('snapshot')
+# while True:
+#     ret, frame = camera.read()
+#     color = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#     FRAME_WINDOW.image(color)
 
-while run:
-    _, frame = camera.read()
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    FRAME_WINDOW.image(frame)
-else:
-    st.write('Stopped')
+if snap_btn:
+    st.write('SNAP!')
+    ret, frame_2 = camera.read()
+    gray = cv2.cvtColor(frame_2, cv2.COLOR_BGR2GRAY)
+    FRAME_WINDOW_2.image(gray)
+    faces = faceCascade.detectMultiScale(
+        gray,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(48, 48),
+    )
+    for (x, y, w, h) in faces:
+        rect_image = cv2.rectangle(gray, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        FRAME_WINDOW_2.image(rect_image)
 
-'''
 
-1.a button to take a snapshot
-1.b take a snapshot at interval
-
-2.a convert snapshot to grayscale
-2.b crop the snapshot to 48*48
-
-3. call the api with requests
-'''
-
-url = 'http://taxifare.lewagon.ai/predict_fare/'
-
-if url == 'http://taxifare.lewagon.ai/predict_fare/':
-
-    st.markdown('Maybe you want to use your own API for the prediction, not the one provided by Le Wagon...')
-
-'''
-
-NEXT: React on the api responses. i.e. interact with the user
-
-'''
+    # body = {'X': cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)}
+    # response = requests.post(url='/api/path-to-your-endpoint/', files=body)
+    # st.write(print(response))
