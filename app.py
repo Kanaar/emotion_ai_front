@@ -3,6 +3,8 @@ import imutils
 import cv2
 import numpy as np
 import SessionState
+import os
+import requests
 
 '''
 # Emotion Ai front
@@ -13,6 +15,9 @@ FRAME_WINDOW_2 = st.image([])
 camera = cv2.VideoCapture(0)
 faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 box = st.checkbox('box')
+global snapshot_btn
+snapshot_btn = st.button('Snapshot')
+# session_state = SessionState(user_name='', favorite_color='black')
 
 def get_faces_coordinates(canvas):
     return faceCascade.detectMultiScale(
@@ -34,30 +39,32 @@ def display(window, canvas, faces_coordinates, rectangles=False):
     else:
         window.image(canvas)
 
-def call_api(data):
-    # body = {'X': cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)}
-    # response = requests.post(url='/api/path-to-your-endpoint/', files=body)
-    # st.write(print(response))
-    pass
+def call_api(snapshot):
+    np.save('/Users/Richard/code/Kanaar/snapshot', snapshot)
+    url='http://127.0.0.1:8000/predict_array'
+    params = {'path' : '/Users/Richard/code/Kanaar/snapshot.npy' }
+    response = requests.get(url, params=params)
+    os.remove('/Users/Richard/code/Kanaar/snapshot.npy')
+    return response.json()
 
-if st.button('Snapshot'):
+def take_snaphot(canvas, faces_coordinates):
+    image = get_face_frames(canvas, faces_coordinates)
+    snapshot = cv2.resize(image, dsize=(48, 48), interpolation=cv2.INTER_CUBIC)
+    return snapshot
+
+while True:
     ret, frame = camera.read()
+    color_canvas = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     gray_canvas =  cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces_coordinates = get_faces_coordinates(gray_canvas)
-    image = get_face_frames(gray_canvas, faces_coordinates)
-    data = cv2.resize(image, dsize=(48, 48), interpolation=cv2.INTER_CUBIC)
-    # emotion = call_api(data)
-    st.write(data)
-
-# while True:
-#     ret, frame = camera.read()
-#     color_canvas = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-#     gray_canvas =  cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-#     faces_coordinates = get_faces_coordinates(gray_canvas)
-#     if box:
-#         display(FRAME_WINDOW, color_canvas, faces_coordinates, rectangles=True)
-#     else:
-#         display(FRAME_WINDOW, color_canvas, faces_coordinates)
-
+    if box:
+        display(FRAME_WINDOW, color_canvas, faces_coordinates, rectangles=True)
+    else:
+        display(FRAME_WINDOW, color_canvas, faces_coordinates)
+    if snapshot_btn:
+        snapshot_btn = False
+        snapshot = take_snaphot(gray_canvas, faces_coordinates)
+        response = call_api(snapshot)
+        st.write(response['prediction'])
 
 
