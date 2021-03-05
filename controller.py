@@ -4,23 +4,6 @@ import cv2
 import numpy as np
 import os
 import requests
-from SessionState import *
-
-'''
-# Emotion Ai front
-'''
-FRAME_WINDOW = st.image([])
-FRAME_WINDOW_2 = st.image([])
-camera = cv2.VideoCapture(0)
-faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-global snapshot_btn
-global prediction
-prediction = "_"
-
-box = st.sidebar.checkbox("box faces")
-assess = st.sidebar.checkbox('assess emotions')
-snapshot_btn = st.sidebar.button('Snapshot')
-
 
 def get_faces_coordinates(canvas):
     return faceCascade.detectMultiScale(
@@ -54,24 +37,3 @@ def take_snaphot(canvas, faces_coordinates):
     image = get_face_frames(canvas, faces_coordinates)
     snapshot = cv2.resize(image, dsize=(48, 48), interpolation=cv2.INTER_CUBIC)
     return snapshot
-
-count = 0
-while True:
-    count += 1
-    ret, frame = camera.read()
-    color_canvas = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    gray_canvas =  cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces_coordinates = get_faces_coordinates(gray_canvas)
-    if box:
-        display(FRAME_WINDOW, color_canvas, faces_coordinates, rectangles=True)
-    else:
-        display(FRAME_WINDOW, color_canvas, faces_coordinates)
-    if snapshot_btn or count == 20:
-        snapshot_btn = False
-        count = 0
-        snapshot = take_snaphot(gray_canvas, faces_coordinates)
-        response = call_api(snapshot)
-        prediction = response['prediction']
-        emotion = st.sidebar.markdown(f"Emotional state: {prediction}")
-
-
