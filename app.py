@@ -40,11 +40,11 @@ def display(window, canvas, faces_coordinates, rectangles=False):
         window.image(canvas)
 
 def call_api(snapshot):
-    np.save('/Users/Richard/code/Kanaar/snapshot', snapshot)
+    np.save('snapshot', snapshot)
     url='http://127.0.0.1:8000/predict_array'
-    params = {'path' : '/Users/Richard/code/Kanaar/snapshot.npy' }
-    response = requests.get(url, params=params)
-    os.remove('/Users/Richard/code/Kanaar/snapshot.npy')
+    files = {'files': open('snapshot.npy', 'rb')}
+    response = requests.post(url, files=files)
+    os.remove('snapshot.npy')
     return response.json()
 
 def take_snaphot(canvas, faces_coordinates):
