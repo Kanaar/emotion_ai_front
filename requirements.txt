@@ -1,5 +1,4 @@
 streamlit
-imutils
 cv2
 numpy
 os

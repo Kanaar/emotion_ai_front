@@ -1,9 +1,5 @@
 import streamlit as st
-import imutils
 import cv2
-import numpy as np
-import os
-import requests
 from controller import *
 
 def app(box):
