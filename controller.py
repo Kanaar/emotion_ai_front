@@ -20,8 +20,8 @@ def get_face_frames(canvas, faces_coordinates):
 
 def call_api(snapshot):
     np.save('snapshot', snapshot)
-    url='http://127.0.0.1:8000/predict_array'
-    # url='https://emotion-ai-cr-3l4porcyga-ew.a.run.app/predict_array'
+    # url='http://127.0.0.1:8000/predict_array'
+    url='https://emotion-ai-cr-3l4porcyga-ew.a.run.app/predict_array'
     files = {'files': open('snapshot.npy', 'rb')}
     response = requests.post(url, files=files)
     os.remove('snapshot.npy')
