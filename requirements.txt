@@ -1,6 +1,5 @@
 streamlit
 opencv-python
 numpy
-os
 requests
 setuptools
