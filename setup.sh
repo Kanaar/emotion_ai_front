@@ -7,5 +7,6 @@ email = vandenbroek.rp@gmail.com
 echo "[server]
 headless = true
 port = $PORT
+enableXsrfProtection=false
 enableCORS = false
 " > ~/.streamlit/config.toml
