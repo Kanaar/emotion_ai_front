@@ -2,6 +2,7 @@ import app_photo
 import app_video
 import streamlit as st
 
+print("App launching...")
 PAGES = {"Video": app_video, "Photo": app_photo}
 
 st.sidebar.title('Navigation')
