@@ -13,8 +13,7 @@ def app(box):
 
     file = st.file_uploader('upload a file', type="jpg")
     if file is not None:
-        file_bytes = np.asarray(bytearray(file.read()), dtype=np.uint8)
-        image = cv2.imdecode(file_bytes, 1)
+        image = img_to_narray(file)
         image = resize_import(image)
         color_canvas = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         gray_canvas = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -28,5 +27,3 @@ def app(box):
         emotion.empty()
         emotion.markdown(f"Emotional state: {prediction}")
         render_frame(FRAME_WINDOW, color_canvas, faces_coordinates, prediction, emotion, box)
-
-

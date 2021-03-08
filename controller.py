@@ -1,5 +1,4 @@
 import streamlit as st
-import imutils
 import cv2
 import numpy as np
 import os
@@ -59,3 +58,9 @@ def resize_import(image):
     if size_adjust < 1:
         return cv2.resize(image, (0,0), fx=size_adjust, fy=size_adjust)
     return image
+
+def img_to_narray(file):
+    file_bytes = np.asarray(bytearray(file.read()), dtype=np.uint8)
+    image = cv2.imdecode(file_bytes, 1)
+    return image
+
