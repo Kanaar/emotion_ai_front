@@ -18,15 +18,6 @@ def get_face_frames(canvas, faces_coordinates):
     for (x, y, w, h) in faces_coordinates:
         return canvas[y:y + h, x:x + w]
 
-def display(window, canvas, faces_coordinates, rectangles=False, text=""):
-    if rectangles:
-        for (x, y, w, h) in faces_coordinates:
-            canvas = cv2.rectangle(canvas, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            cv2.putText(canvas, text, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
-        window.image(canvas)
-    else:
-        window.image(canvas)
-
 def call_api(snapshot):
     np.save('snapshot', snapshot)
     url='http://127.0.0.1:8000/predict_array'
@@ -46,3 +37,25 @@ def file_selector(folder_path='.'):
     selected_filename = st.selectbox('Select a file', filenames)
     return os.path.join(folder_path, selected_filename)
 
+def display(window, canvas, faces_coordinates, rectangles=False, text=""):
+    if rectangles:
+        for (x, y, w, h) in faces_coordinates:
+            canvas = cv2.rectangle(canvas, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            cv2.putText(canvas, text, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
+        window.image(canvas)
+    else:
+        window.image(canvas)
+
+def render_frame(window, canvas, faces_coordinates, prediction, output_field, boxed):
+    if boxed:
+        display(window, canvas, faces_coordinates, rectangles=True, text=prediction)
+    else:
+        display(window, canvas, faces_coordinates)
+        output_field.empty()
+        output_field.markdown(f"Emotional state: {prediction}")
+
+def resize_import(image):
+    size_adjust = 480 / image.shape[0]
+    if size_adjust < 1:
+        return cv2.resize(image, (0,0), fx=size_adjust, fy=size_adjust)
+    return image
