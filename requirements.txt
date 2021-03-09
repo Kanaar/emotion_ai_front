@@ -1,5 +1,5 @@
-streamlit==0.77.0
-python3-opencv
+streamlit
+opencv-python
 numpy
 requests
 setuptools
