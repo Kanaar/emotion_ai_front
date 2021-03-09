@@ -1,6 +1,5 @@
 streamlit==0.77.0
-opencv-python
+python3-opencv
 numpy
 requests
 setuptools
-libgl1
