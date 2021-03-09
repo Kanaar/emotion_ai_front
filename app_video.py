@@ -1,12 +1,16 @@
 import streamlit as st
 import cv2
 from controller import *
+from streamlit_webrtc import webrtc_streamer
+
+
+webrtc_streamer(key="example")
 
 def app(box):
     st.title('AEmotional Intelligence')
     st.write('Real time video capture')
 
-    camera = cv2.VideoCapture(0)
+    camera = None#cv2.VideoCapture(0)
     FRAME_WINDOW = st.image([])
     global prediction
     prediction = "..."
@@ -15,7 +19,7 @@ def app(box):
     run = st.button('run')
 
     count = 0
-    while True:
+    if False:#while True:
         count += 1
         ret, frame = camera.read()
         color_canvas = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
