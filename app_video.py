@@ -6,7 +6,7 @@ def app(box):
     st.title('AEmotional Intelligence')
     st.write('Real time video capture')
 
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture(cv2.CAP_V4L2)
     FRAME_WINDOW = st.image([])
     global prediction
     prediction = "..."
