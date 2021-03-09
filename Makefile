@@ -10,7 +10,7 @@ install_requirements:
 #         HEROKU COMMANDS
 # ----------------------------------
 run_streamlit:
-    streamlit run app.py
+	-@streamlit run app.py
 
 streamlit:
 	-@streamlit run app.py
@@ -19,7 +19,7 @@ heroku_login:
 	-@heroku login
 
 heroku_create_app:
-	-@heroku create ${APP_NAME}
+	-@heroku create ${emotion-ai-front}
 
 deploy_heroku:
 	-@git push heroku master
